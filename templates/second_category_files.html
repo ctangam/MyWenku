@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+ <link rel="stylesheet" href="{% static 'css/list.css' %}">
+{% endblock %}
+
+{% block body %}
+<div class="container-fluid wenku-header">
+  		<div class="container">
+			<div class="col-xs-6">
+				<a href="{% url 'home' %}" title="我的文库">
+					<img alt="我的文库" class="wenku-logo" src="/static/img/logo1.jpg">
+				</a>
+			</div>
+			<div class="col-xs-6">
+				<form class="pull-right" action="{% url 'search' 'all' 'default'%}" target="_blank" method="get" role="search">
+					<div class="input-group input-group-lg">
+						<input type="text" required="required" name="wd" placeholder="请输入搜索关键字" class="form-control">
+						<span class="input-group-btn"><button type="submit" class="btn btn-default">文库搜索</button></span>
+					</div>
+				</form>
+			</div>
+	  	</div>
+  	</div>
+    <nav class="container-fluid navbar-inverse navbar navbar-default hidden-mobile" role="navigation">
+		<div class="container">
+			<ul class="nav navbar-nav">
+				<li><a href="{% url 'home' %}">首页</a></li>
+				<li{% ifequal channel.id 1 %} class="active" {% endifequal %}><a href="{% url 'channel_files' 1%}">编程开发</a></li>
+
+				<li{% ifequal channel.id 2 %} class="active" {% endifequal %}><a href="{% url 'channel_files' 2%}">系统运维</a></li>
+
+				<li{% ifequal channel.id 3 %} class="active" {% endifequal %}><a href="{% url 'channel_files' 3%}">设计·创作</a></li>
+
+				<li{% ifequal channel.id 4 %} class="active" {% endifequal %}><a href="{% url 'channel_files' 4%}">云计算·大数据</a></li>
+
+				<li{% ifequal channel.id 5 %} class="active" {% endifequal %}><a href="{% url 'channel_files' 5%}">产品·运营·综合</a></li>
+
+			</ul>
+			 <ul class="nav navbar-nav navbar-right">
+		      <li><a href="{% url 'upload' %}"><span class="fa fa-upload"></span> 上传文档</a></li>
+		      <li><a href="{% url 'user' %}"><span class="fa fa-user"></span> 会员中心</a></li>
+		    </ul>
+		</div>
+	</nav>
+<div class="container wenku-main">
+    <div class="row">
+
+        <div class="col-xs-4 wenku-right pull-right">
+            <div class="panel panel-default wenku-cate wenku-noborder">
+                <div class="panel-heading"><div class="strong">{{ channel }}</div></div>
+                <div class="panel-body">
+                    <a href="{% url 'channel_files' channel.id %}" title="不限分类">不限分类 ({{ channel.get_files_count }})</a>
+                {% for category in channel.get_first_categories %}
+                    <a href="{% url 'first_category_files' channel.id category.id%}" title="{{ category.name }}" {% ifequal category.id fid %} class="active" {% endifequal %}{% ifequal category.get_files_count 0 %} class="color-gray" {% endifequal %}>{{ category.name }} ({{ category.get_files_count }})</a>
+                {% endfor %}
+
+                </div>
+            </div>
+
+
+            <div class="panel panel-default wenku-noborder wenku-hot">
+                <div class="panel-heading"><div class="strong">热门文档</div></div>
+                <div class="panel-body">
+                    <ul>
+                    {% for file in second_category.get_hotest_files %}
+                        <li><img alt="{{ file.ext }}文档" src="/static/img/{{ file.ext }}_24.png"/><a href="{% url 'content' file.id %}" target="_blank" title="{{ file.name }}">{{ file.name }}</a></li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+
+
+
+        <div class="col-xs-8 wenku-left wenku-nopadding pull-left">
+
+            <div class="panel panel-default wenku-noradius wenku-noborder">
+                <div class="panel-body">
+                    <a href="{% url 'first_category_files' channel.id first_category.id %}" >不限分类 ({{ first_category.get_files_count }})</a>
+                    {% for category in first_category.get_second_categories %}
+                    <a href="{% url 'second_category_files' channel.id first_category.id category.id %}" title="{{ category.name }}" {% ifequal category.id sid %} class="active" {% endifequal %}{% ifequal category.get_files_count 0 %} class="color-gray" {% endifequal %}>{{ category.name }} ({{ category.get_files_count }})</a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="panel panel-default wenku-noborder">
+                <div class="panel-body">
+                    <ul>
+                        {% if files %}
+                        {% for file in files %}
+                        <li class="clearfix">
+                            <a href="{% url 'content' file.id %}" title="{{ file.name }}" class="col-xs-1 wenku-nopadding" target="_blank">
+                                <img alt="{{ file.ext }}文档" src="/static/img/{{ file.ext }}_54.png"/>
+                            </a>
+                            <div class="col-xs-10">
+                                <h3 class="wenku-text-ellipsis"><a href="{% url 'content' file.id %}" title="{{ file.name }}" target="_blank">{{ file.name }}</a></h3>
+                                <div class="help-block wenku-text-ellipsis">
+										<span>
+											[<a href="{% url 'second_category_files' channel.id first_category.id second_category.id%}" title="{{ file.second_category }}" class="text-danger" style="margin-right: 0px">
+												{{ file.second_category }}
+											</a>]
+										</span>
+                                    <span><a href="#" title="{{ file.uploaded_by }}" target="_blank" class="text-default">{{ file.uploaded_by }}</a></span>
+                                    <span>大小:<span>{{ file.size|filesizeformat }}</span></span>
+                                    <span>页数:<span>{{ file.page }}</span></span>
+                                    <span>时间:<span>{{ file.uploaded_at }}</span></span>
+                                </div>
+                            </div>
+                        </li>
+                        {% endfor %}
+                        {% else %}
+                        <li class="clearfix">
+                            <div class="help-block text-center">当前分类暂时没有文档</div>
+                        </li>
+                        {% endif %}
+                    </ul>
+                <nav aria-label="Page navigation">
+                            <ul class="pagination">
+
+                                {% if  files.previous_page_number > 0 %}
+                                    <li>
+                                        <a href="?wd={{ wd }}&page={{ files.previous_page_number }}"
+                                           aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% for page_num in page_list %}
+                                    {% if page_num == files.number %}
+                                        <li class="active"><a href="?wd={{ wd }}&page={{ page_num }}">{{ page_num }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li><a href="?wd={{ wd }}&page={{ page_num }}">{{ page_num }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if files.has_next %}
+                                    <li>
+                                        <a href="?wd={{ wd }}&page={{ files.next_page_number }}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                            </ul>
+                        </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="container-fluid wenku-footer">
+    	<div class="container">
+    		<div class="row wenku-flink">
+    			<div class="col-xs-12">
+    				<div><strong>友情链接</strong></div>
+    				<div class="help-block">
+
+    					<a href="https://www.djangoproject.com/" target="_blank" title="Django">Django</a>
+
+    					<a href="https://www.python.org/" target="_blank" title="Python">Python</a>
+
+    					<a href="https://github.com/" target="_blank" title="Github">Github</a>
+
+    					<a href="https://www.mysql.com/" target="_blank" title="MySQL">MySQL</a>
+
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+    <div class="container-fluid wenku-footer-dark">
+    	<div class="container">
+    		<div class="row">
+    			<div class="col-xs-12 text-center wenku-help help-block">
+
+						<a href="#" target="_blank" title="关于我们">关于我们</a>
+
+						<a href="#" target="_blank" title="关于我们">文库协议</a>
+
+						<a href="#" target="_blank" title="意见反馈">意见反馈</a>
+
+						<a href="#" target="_blank" title="免责声明">免责声明</a>
+
+						<a href="" target="_blank" title="意见反馈">联系我们</a>
+
+    			</div>
+    			<div class="col-xs-12 text-center help-block">
+					我的文库&nbsp;&nbsp;©2019&nbsp;&nbsp;<span class="text-muted">|</span>&nbsp;&nbsp;<a href="#" title="站点地图" target="_blank">站点地图</a>
+    			</div>
+    			<div class="col-xs-12 text-center help-block">
+					<small>    				Powered By <a href="#" style="color: #1abc9c;" target="_blank" title="Django">Django</a> v1.1
+                    </small>
+    			</div>
+			</div>
+    	</div>
+    </div>
+{% endblock %}

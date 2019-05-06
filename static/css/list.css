@@ -1,0 +1,18 @@
+/*wenku page list [star]*/
+/*.wenku-main{margin-bottom: 15px;}*/
+h3{font-size: 20px;display: block;}
+.wenku-left .panel-body a{display: inline-block;margin-right: 10px;}
+.wenku-left .panel-body a.active{color: #1abc9c;font-weight: bold;}
+.wenku-left .panel-body li.clearfix .help-block>span{margin-right: 5px;}
+.wenku-left .panel-body li.clearfix{border-bottom: 1px dashed #EEEEEE;padding: 15px 0px;}
+.wenku-left .panel-body li.clearfix:hover{background-color: #efefef;}
+.wenku-right{padding-right: 0px;}
+.wenku-right .panel-heading{background-color: #FFFFFF;}
+.wenku-right .wenku-cate .panel-body a{display: inline-block;width: 156px;text-overflow: ellipsis;white-space: nowrap;overflow: hidden;line-height: 100%;}
+.wenku-right .wenku-cate .panel-body a.active{color: #1abc9c;font-weight: bold;}
+.wenku-right .wenku-hot img{height: 18px;position: relative;top: -2px;margin-right: 5px;}
+.wenku-right .wenku-hot li{display: block;border-bottom: 1px dashed #EFEFEF;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 240%;}
+.wenku-right .wenku-hot .panel-body{padding-bottom: 5px;}
+.wenku-left .col-xs-11 .help-block{margin-top: 12px;margin-bottom: -10px;}
+
+/*wenku page list [end]*/
