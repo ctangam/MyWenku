@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container-fluid">
+    <div class="alert alert-success">
+        成功上传文档！
+    </div>
+      <div class="btn-group">
+          <button class="btn btn-default"><a href="{% url 'user' %}"> 查看已上传文档</a></button>
+          <button class="btn btn-primary"><a href="{% url 'upload' %}"> 继续上传文档</a></button>
+      </div>
+    </div>
+{% endblock %}

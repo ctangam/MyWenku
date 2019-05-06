@@ -1,0 +1,23 @@
+
+/*wenku page search [start]*/
+ .wenku-top{font-size: 14px;color: #888888;padding: 5px;}
+ .wenku-top .pull-left a{margin-right: 8px;}
+ .wenku-top .pull-right a{margin-left: 8px;}
+/* .wenku-header .col-xs-3{width: 200px;}*/
+ .wenku-left{padding-left: 0px;}
+ .wenku-left .panel-body li a{padding-left: 1em;display: block;line-height: 230%;}
+ .wenku-left .panel-body li a.active, .wenku-left .panel-body li a:hover{background-color: #efefef;color:#16a085;}
+ .wenku-left .panel-body li a:hover{font-weight: normal;}
+ .col-xs-7{padding-left: 0px;}
+ .wenku-result{min-height: 538px;}
+ .wenku-result .wenku-title{word-break: break-all;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
+ .wenku-result a{color: #16a085;font-size: 18px;}
+ .wenku-result a img{height: 18px;position: relative;top: -2px;}
+ .wenku-result li{padding: 18px 0px 10px;}
+ .wenku-search-words a{display: inline-block;margin-right: 8px;}
+ .wenku-title a:hover{text-decoration: underline;}
+ .wenku-word a{font-size: 14px;margin:5px;}
+ .wenku-desc{text-indent: 2em;word-break: break-all;}
+ .wenku-result em{color: red;font-style: normal;}
+ .wenku-logo{margin:20px 0px 17px;width: 100%;height: auto;}
+/*wenku page search [end]*/

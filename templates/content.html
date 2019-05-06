@@ -1,0 +1,628 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+ <link rel="stylesheet" href="{% static 'css/content.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container wenku-main">
+        <div class="row">
+        <div class="col-xs-9 wenku-left wenku-nopadding">
+            <div class="panel panel-default wenku-noborder">
+                <div class="panel-body">
+
+                    <h1><img alt="{{ file.ext }}文档" src="/static/img/{{ file.ext }}_24.png"/> {{ file.name }}</h1>
+                <div class="help-block wenku-doc-info">
+                    <span>
+                        <a href="{% url 'channel_files' file.second_category.first_category.channel.id %}" title="{{ file.second_category.first_category.channel.name }}">{{ file.second_category.first_category.channel.name }}</a> >
+                        <a href="{% url 'first_category_files' file.second_category.first_category.channel.id file.second_category.first_category.id %}" title="{{ file.second_category.first_category.name }}">{{ file.second_category.first_category.name }}</a> >
+                        <a href="{% url 'second_category_files' file.second_category.first_category.channel.id file.second_category.first_category.id file.second_category.id %}" title="{{ file.second_category.name }}">{{ file.second_category.name }}</a> >
+                    <span class="text-muted">
+                        文档预览
+                    </span>
+                    </span>
+                    <div class="pull-right text-muted">
+                        <span title="页数"><i class="fa fa-file-text-o"></i> {{ file.page }} 页</span>
+                        <span title="下载"><i class="fa fa-download"></i> {{ file.downloads }} 下载</span>
+                        <span title="浏览"><i class="fa fa-eye"></i> {{ file.views }} 浏览</span>
+                        <span title="收藏"><i class="fa fa-heart-o"></i> {{ file.collects }} 收藏</span>
+                        </div>
+                </div>
+                {% ifequal file.status 1 %}
+                    <div class="wenku-viewer" id="wenku-viewer" data-scale="9">
+                        {% for img in images %}
+                            <img src="/static/img/loading.gif" data-original="{{ img }}" class="wenku-lazy wenku-viewer-img wenku-page{{ forloop.counter }}" data-page="{{ forloop.counter }}" alt="{{ file.name }}{{ forloop.counter }}"/>
+                        {% endfor %}
+                    {% if file.page > 10 %}
+                        <div class="wenku-viewer-more text-center" data-svg="/static/svg/{{ file.id }}/content" data-next="11" data-ext="svg" >
+
+                            <div>下载文档到电脑，方便使用</div>
+                            <div><a href="javascript:void(0);" class="btn btn-primary" data-toggle="modal" data-target="#ModalDownload"><i class="fa fa-cloud-download"></i> 下载文档</a></div>
+
+
+                            <a href="javascript:void(0);" class="wenku-viewer-more-btn">
+                                <div class="help-block">
+
+                                    当前文档最多只能预览 10 页 <br>
+
+                                    还有 <span class="wenku-unread-pages">{{ file.page|add:-10 }}</span> 页可预览，<span class="text-primary">继续阅读</span>
+                                </div>
+                            </a>
+
+                            <div class="help-block"><a href="javascript:void(0);" class="wenku-viewer-more-btn"><i class="fa fa-angle-down"></i></a></div>
+                        </div>
+                    {% endif %}
+                    </div>
+                    <div class="help-block">
+                        <span>本文档由 <a href="#" target="_blank" title="{{ file.uploaded_by }}">{{ file.uploaded_by }}</a> 于 <span class="text-muted">{{ file.uploaded_at }}</span>上传分享</span>
+                    </div>
+                    <div class="help-block wenku-action">
+                        <div class="pull-left">
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#ModalReport" class="btn btn-primary btn-sm"><i class="fa fa-warning"></i> 举报</a>
+                        </div>
+                        <div class="pull-right wenku-mgl-15px">
+                            <a href="javascript:void(0);" rel="nofollow" data-toggle="modal" data-target="#ModalDownload" target="_blank" class="btn btn-primary btn-sm"><i class="fa fa-cloud-download"></i> 下载<span class="hidden-xs">原文档</span>(697.16 KB)</a>
+                        </div>
+                        <div class="pull-right">
+
+                            <a href="javascript:void(0);" rel="nofollow" class="btn btn-primary btn-sm wenku-collect"><i class="fa fa-heart-o"></i>  <span>收藏</span></a>
+
+                            <a href="javascript:void(0);" data-toggle="modal" data-target="#ModalShare" class="btn btn-primary btn-sm"><i class="fa fa-share-alt"></i> 分享</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">该文档还未通过审核，暂不支持浏览。</div>
+                {% endifequal %}
+                </div>
+                </div>
+            </div>
+        <div class="col-xs-3 wenku-right">
+
+            <div class="panel panel-default wenku-noborder wenku-maylike">
+                <div class="panel-heading">
+                    <div class="strong">热门文档</div>
+                </div>
+                <div class="panel-body">
+
+                    <ul class="wenku-tabs-list">
+                        {% for file in file.get_hotest_files %}
+                        <li><img alt="{{ file.ext }}文档" src="/static/img/{{ file.ext }}_24.png"/><a href="{% url 'content' file.id %}" target="_blank" title="{{ file.name }}">{{ file.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {{end}}
+
+            <div class="panel panel-default wenku-noborder wenku-maylike">
+                <div class="panel-heading">
+                    <div class="strong">最新文档</div>
+                </div>
+                <div class="panel-body">
+
+                    <ul class="wenku-tabs-list">
+                        {% for file in file.get_latest_files %}
+                        <li><img alt="{{ file.ext }}文档" src="/static/img/{{ file.ext }}_24.png"/><a href="{% url 'content' file.id %}" target="_blank" title="{{ file.name }}">{{ file.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+<div class="container-fluid navbar-default navbar-fixed-bottom" role="navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-9">
+                <ul class="nav navbar-nav">
+                    <li><a href="javascript:void(0);" class="wenku-expend"><i class="fa fa-arrows-alt em14"></i>&nbsp;</a></li>
+                    <li><a href="javascript:void(0);" data-toggle="modal" data-target="#ModalShare"><i class="fa fa-share-alt em14"></i>&nbsp;</a></li>
+                    <li><a href="javascript:void(0);" class="wenku-collect"><i class="fa fa-heart-o em14"></i>&nbsp;</a></li>
+                    <li class="hidden-xs"><a href="javascript:void(0);" class="wenku-scale-minus"><i class="fa fa-search-minus em14"></i>&nbsp;</a></li>
+                    <li class="hidden-xs"><a href="javascript:void(0);" class="wenku-scale-plus"><i class="fa fa-search-plus em14"></i>&nbsp;</a></li>
+                    <li class="wenku-mgl-15px"><a href="javascript:void(0);" class="wenku-page-prev"><i class="fa fa-chevron-up em14"></i></a></li>
+                    <p class="navbar-text"> <span class="wenku-current-page">1</span> /
+                        <span class="wenku-total-page">{{ file.page }}</span>
+                    </p>
+                    <li class="wenku-mgr-15px"><a href="javascript:void(0);" class="wenku-page-next"><i class="fa fa-chevron-down em14"></i></a></li>
+                    <li><a href="javascript:void(0);" class="wenku-goto-comment"><i class="fa fa-comments-o em14"></i> 评价文档</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if true %}
+                    <div class="navbar-text"><i class="fa fa-database"></i>&nbsp;&nbsp;0&nbsp;&nbsp;个金币 </div>
+                    <li class="active" data-toggle="modal" data-target="#ModalDownload"><a href="javascript:void(0);"><i class="fa fa-cloud-download em14"></i> 下载文档({{ file.size|filesizeformat }})</a></li>
+                    {% else %}
+                        <div class="navbar-text"><span class="text-danger">不允许下载&nbsp;</span>&nbsp;</div>
+                        <li class="active active-forbidden"><a href="javascript:void(0);"><i class="fa fa-cloud-download em14"></i> 下载文档({{ file.size|filesizeformat }})</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="col-xs-3">
+                <ul class="nav navbar-nav navbar-right wenku-up-to-top">
+                    <li class="active go-top"><a href="javascript:void(0);" ><i class="fa fa-arrow-up em14"></i> 回到顶部</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="modal fade" id="ModalDownload" tabindex="-1" role="dialog" aria-labelledby="ModalShareLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="ModalDownloadLabel">下载提示</h4>
+            </div>
+            <div class="modal-body clearfix">
+
+
+                <div class="help-block wenku-download-tips">文档下载，需要消耗您 <span class="text-danger">0</span> 个金币。</div>
+
+
+                <div class="help-block">您确定要下载 <span class="text-danger">MongoDB简明教程</span> 文档吗？</div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">取消下载</button>
+                <button type="button" class="btn btn-primary btn-submit-download" data-url="/down/31" data-id="31">确定下载</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="modal fade" id="ModalShare" tabindex="-1" role="dialog" aria-labelledby="ModalShareLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="ModalShareLabel">分享，让知识传承更久远</h4>
+            </div>
+            <div class="modal-body">
+                <div class="bdsharebuttonbox bdshare-button-style1-32" data-bd-bind="1555659028503"><a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a><a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a><a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a><a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a><a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a><a href="#" class="bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a><a href="#" class="bds_bdysc" data-cmd="bdysc" title="分享到百度云收藏"></a><a href="#" class="bds_kaixin001" data-cmd="kaixin001" title="分享到开心网"></a><a href="#" class="bds_bdxc" data-cmd="bdxc" title="分享到百度相册"></a><a href="#" class="bds_tieba" data-cmd="tieba" title="分享到百度贴吧"></a><a href="#" class="bds_douban" data-cmd="douban" title="分享到豆瓣网"></a><a href="#" class="bds_tqf" data-cmd="tqf" title="分享到腾讯朋友"></a><a href="#" class="bds_thx" data-cmd="thx" title="分享到和讯微博"></a><a href="#" class="bds_bdhome" data-cmd="bdhome" title="分享到百度新首页"></a><a href="#" class="bds_meilishuo" data-cmd="meilishuo" title="分享到美丽说"></a><a href="#" class="bds_ibaidu" data-cmd="ibaidu" title="分享到百度中心"></a><a href="#" class="bds_mogujie" data-cmd="mogujie" title="分享到蘑菇街"></a><a href="#" class="bds_diandian" data-cmd="diandian" title="分享到点点网"></a><a href="#" class="bds_huaban" data-cmd="huaban" title="分享到花瓣"></a><a href="#" class="bds_hx" data-cmd="hx" title="分享到和讯"></a><a href="#" class="bds_duitang" data-cmd="duitang" title="分享到堆糖"></a><a href="#" class="bds_fx" data-cmd="fx" title="分享到飞信"></a><a href="#" class="bds_youdao" data-cmd="youdao" title="分享到有道云笔记"></a><a href="#" class="bds_sdo" data-cmd="sdo" title="分享到麦库记事"></a><a href="#" class="bds_qingbiji" data-cmd="qingbiji" title="分享到轻笔记"></a><a href="#" class="bds_people" data-cmd="people" title="分享到人民微博"></a><a href="#" class="bds_xinhua" data-cmd="xinhua" title="分享到新华微博"></a><a href="#" class="bds_mail" data-cmd="mail" title="分享到邮件分享"></a><a href="#" class="bds_isohu" data-cmd="isohu" title="分享到我的搜狐"></a><a href="#" class="bds_yaolan" data-cmd="yaolan" title="分享到摇篮空间"></a><a href="#" class="bds_wealink" data-cmd="wealink" title="分享到若邻网"></a><a href="#" class="bds_iguba" data-cmd="iguba" title="分享到股吧"></a><a href="#" class="bds_ty" data-cmd="ty" title="分享到天涯社区"></a><a href="#" class="bds_fbook" data-cmd="fbook" title="分享到Facebook"></a><a href="#" class="bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a><a href="#" class="bds_h163" data-cmd="h163" title="分享到网易热"></a><a href="#" class="bds_twi" data-cmd="twi" title="分享到Twitter"></a><a href="#" class="bds_evernotecn" data-cmd="evernotecn" title="分享到印象笔记"></a><a href="#" class="bds_copy" data-cmd="copy" title="分享到复制网址"></a></div>
+                <script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"32"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js'];</script>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">取消分享</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="modal fade" id="ModalReport" tabindex="-1" role="dialog" aria-labelledby="ModalShareLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="ModalReportLabel">文档举报</h4>
+            </div>
+            <div class="modal-body clearfix">
+                <div class="help-block clearfix">举报原因：</div>
+
+                <div class="col-xs-4"><label><input type="radio" name="Reason" value="1"> 垃圾广告
+</label></div>
+
+                <div class="col-xs-4"><label><input type="radio" name="Reason" value="2"> 淫秽色情
+</label></div>
+
+                <div class="col-xs-4"><label><input type="radio" name="Reason" value="3"> 虚假中奖
+</label></div>
+
+                <div class="col-xs-4"><label><input type="radio" name="Reason" value="4"> 敏感信息
+</label></div>
+
+                <div class="col-xs-4"><label><input type="radio" name="Reason" value="5"> 人身攻击
+</label></div>
+
+                <div class="col-xs-4"><label><input type="radio" name="Reason" value="6"> 骚扰他人</label></div>
+
+                <input type="hidden" name="Did" value="31">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">取消举报</button>
+                <button type="button" class="btn btn-primary btn-submit-report" data-dismiss="modal">提交举报</button>
+            </div>
+        </div>
+    </div>
+</div>
+    <div class="modal fade" id="ModalCollect" tabindex="-1" role="dialog" aria-labelledby="ModalShareLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title" id="ModalCollectLabel">收藏文档</h4>
+            </div>
+            <div class="modal-body clearfix">
+                <div class="help-block wenku-clt-title">收藏文档</div>
+                <div class="form-group">
+                    <input type="text" class="disabled form-control" readonly="readonly" name="Title" value="MongoDB简明教程">
+                </div>
+                <div class="help-block">请选择收藏夹</div>
+                <div class="form-group">
+                    <select name="Cid" class="form-control">
+                        <option value="">请选择收藏夹</option>
+                    </select>
+                </div>
+                <input type="hidden" name="Did" value="31">
+                <div class="help-block text-right wenku-create-folder">没有合适的收藏夹？去 <a href="#" target="_blank" class="text-primary">创建收藏夹</a></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">取消收藏</button>
+                <button type="button" class="btn btn-primary btn-submit-collect">提交收藏</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+
+//文库懒加载
+    function WenkuLazyLoad() {
+        var imgs=$("#wenku-viewer .wenku-lazy"),hScrollTop=$(window).scrollTop(),hWinow=$(window).height();
+        $.each(imgs,function () {
+            if(hScrollTop-$(this).offset().top+hWinow>0){
+                if($(this).attr("src")!=$(this).attr("data-original")){
+                    $(this).attr("src",$(this).attr("data-original")).fadeIn(100);
+                    // $(this).removeClass("wenku-lazy");
+                }
+                $(".wenku-current-page").text($(this).attr("data-page"));
+            }
+        });
+    }
+
+    //获取当前scale
+    function CurrentScale(number) {
+        if(number){//设置
+            return parseInt($(".wenku-viewer").attr("data-scale",number));
+        }else{
+            return parseInt($(".wenku-viewer").attr("data-scale"));
+        }
+
+    }
+
+    //放大缩小
+    function Scale(number) {
+        //left:col-xs-9 wenku-left wenku-nopadding
+        //right:col-xs-3 wenku-right
+        //number的值是：9、10、11、12
+        if(number==9 || number==10 || number==11 || number==12){
+            $(".wenku-main .wenku-left").attr("class","col-xs-"+number+" wenku-left wenku-nopadding")
+            var r=12-number;
+            $(".wenku-main .wenku-right").attr("class","col-xs-"+r+" wenku-right");
+        }
+    }
+
+    //滚动到指定页
+    function ScrollToPage(page) {
+        $('html,body').animate({scrollTop:$(".wenku-page"+page).offset().top}, 200);
+    }
+
+    //调整当前页，用于文档预览放大或缩小时
+    function AdjustViewer() {
+        ScrollToPage(GetCurrentPage());
+    }
+
+
+
+    //获取当前页
+    function GetCurrentPage() {
+        return parseInt($(".wenku-current-page").text());
+    }
+    //获取当前页
+    function GetTotalPage() {
+        return parseInt($(".wenku-total-page").text());
+    }
+    //获取下一批次的起始页
+    function NextStartPage() {
+        return parseInt($(".wenku-viewer-more").attr("data-next"));
+    }
+
+	    var pages=[];
+
+	    //监听下载
+        $('#ModalDownload').on('show.bs.modal', function () {
+            // 请求链接其实不应该写死在这里的...
+            $.get("/downfree",{id:$("#ModalDownload .btn-submit-download").attr("data-id")},function(ret){
+                if(ret.status==1){
+                    $('#ModalDownload .wenku-download-tips').text(ret.msg);
+                }
+            });
+        });
+
+
+
+        WenkuLazyLoad();//document ready也调用一次
+        var timeout;
+        $(window).on("scroll",function () {
+            clearTimeout(timeout);//避免短时间内重复计算
+            timeout=setTimeout(function () {
+                WenkuLazyLoad();
+            },30);
+        });
+
+        $(window).on("resize",function () {
+            WenkuLazyLoad();
+        });
+
+		//分享按钮
+		$("#ModalShare .bdsharebuttonbox a").click(function(){
+			$("#ModalShare").modal("hide");
+		});
+
+		//收藏文档
+		$(".wenku-collect").click(function(e){
+			e.preventDefault();
+			var _this=$(this),_url=_this.attr("href");
+			$.get(_url,function(rt){
+				if(rt.status==1){
+					_this.addClass("disabled");
+					wenku_alert("success",rt.msg,3000,"");
+				}else{
+					wenku_alert("danger",rt.msg,3000,"");
+				}
+			});
+		});
+
+		//文库文档上下页按钮功能实现
+        //上一页
+        $(".wenku-page-prev").click(function(){
+            var prevPage=GetCurrentPage()-1;
+            if(prevPage>0){
+                var hWindow=$(window).height(),hPage=$(".wenku-page"+prevPage).height();
+                if(hPage>hWindow){//文档页面高度与窗口高度做比较
+                    ScrollToPage(prevPage);
+                }else{
+                    //这个不能调用ScrollToPage
+                    $('html,body').animate({scrollTop:$(".wenku-page"+prevPage).offset().top+hPage-hWindow}, 200);
+                }
+            }
+        });
+
+        //下一页
+        $(".wenku-page-next").click(function(){
+            //如果下一页正在加载中，则不再执行下一页请求
+            if($(".wenku-page-next").attr("data-loading")==1) return false;
+            //设置下一页的状态为正在加载中
+            $(".wenku-page-next").attr("data-loading",1);
+
+            var nextPage=GetCurrentPage()+1,//下一页
+                nextStart=NextStartPage(),//下一批次页面
+                total=GetTotalPage();//总页数
+            var limit=nextStart>0?nextStart:total;
+            if(nextPage<limit){
+                var hWindow=$(window).height(),//窗口高度
+                    hPage=$(".wenku-page"+nextPage).height();//下一页的高度
+                if(hPage>hWindow){//文档页面高度与窗口高度做比较
+                    ScrollToPage(nextPage);
+                }else{
+                    //这个不能调用ScrollToPage
+                    $('html,body').animate({scrollTop:$(".wenku-page"+nextPage).offset().top+hPage-hWindow}, 200);
+                }
+            }else{
+                if(nextStart>0) $(".wenku-viewer-more-btn:first").trigger("click");
+                $(".wenku-page-next").trigger("click");
+            }
+            $(".wenku-page-next").attr("data-loading",0);
+        });
+
+
+        //全屏
+        $(document).on("click",".wenku-expend",function () {
+            $(this).addClass("wenku-compress").removeClass("wenku-expend");
+            $(this).find(".fa-arrows-alt").addClass("fa-compress").removeClass("fa-arrows-alt");
+            Scale(12);
+            CurrentScale(12);
+            $(".wenku-scale-plus").addClass("disabled");
+            $(".wenku-scale-minus").removeClass("disabled").attr("data-current",9);
+            AdjustViewer();//调整浏览
+        });
+        //小屏
+        $(document).on("click",".wenku-compress",function () {
+            $(this).addClass("wenku-expend").removeClass("wenku-compress");
+            $(this).find(".fa-compress").addClass("fa-arrows-alt").removeClass("fa-compress");
+            Scale(9);
+            CurrentScale(9);
+            $(".wenku-scale-plus").removeClass("disabled").attr("data-current",12);
+            $(".wenku-scale-minus").addClass("disabled");
+            AdjustViewer();
+        });
+        //放大
+        $(".wenku-scale-plus").click(function () {
+            var cur=CurrentScale()+1;
+            if(cur<=12){
+                Scale(cur);
+                CurrentScale(cur);
+                AdjustViewer();
+            }
+        });
+        //缩小
+        $(".wenku-scale-minus").click(function () {
+            var cur=CurrentScale()-1;
+            if(cur>=9){
+                Scale(cur);
+                CurrentScale(cur);
+                AdjustViewer();
+            }
+        });
+
+
+        //加载下一批次页面
+        $(".wenku-viewer-more-btn").click(function () {
+            var viewmore=$(this).parents(".wenku-viewer-more");
+            var unreadpages=$(".wenku-unread-pages").text();//未阅读页数
+            var svgurl=viewmore.attr("data-svg");//svg图片预览链接
+            var previewext=viewmore.attr("data-ext");//图片扩展名
+            var startpage=parseInt(viewmore.attr("data-next"));//下一批页面的开始页数
+            if(startpage==0) return true;
+            var title=$("h1").text();
+            var html='',cnt=10,total=GetTotalPage();
+            if(unreadpages>10){
+                unreadpages=unreadpages-10;
+            }else{
+                cnt=unreadpages;
+                viewmore.addClass("hide");
+            }
+
+            var scrollPage=startpage-1;
+
+            for(var i=0;i<cnt;i++){
+                if(startpage<=total){
+                    html+='<img src="/static/img/loading.gif" data-original="'+svgurl+startpage+'.'+previewext+'" class="wenku-lazy wenku-viewer-img wenku-page'+startpage+'" data-page="'+startpage+'" alt="'+title+' 第 '+startpage+' 页">';
+                    startpage=startpage+1
+                }
+            }
+
+            $(".wenku-viewer-more").before(html);//追加页数
+
+            if(viewmore.hasClass("hide")){
+                viewmore.attr("data-next",0);//重置为0，表示没有下一批次需要加载的页面了
+            }else{
+                viewmore.attr("data-next",startpage);
+            }
+            $(".wenku-unread-pages").text(unreadpages);
+            WenkuLazyLoad();//再调用一次懒加载
+        });
+
+        //评论框
+        $(".wenku-goto-comment").click(function(){
+            $('html,body').animate({scrollTop:$(".wenku-comment").offset().top}, 200);
+        });
+
+		//打分
+		$("#wenku-content .wenku-score i").hover(function(){
+			var _this=$(this),star=_this.attr("data-v");
+			$("#wenku-content .wenku-score i").addClass("fa-star-o").removeClass("fa-star");
+			for (var i=1;i<=star;i++){
+				$("#wenku-content .wenku-score i[data-v="+i+"]").addClass("fa-star").removeClass("fa-star-o");
+			}
+			var tips="5星好评，文档很给力"
+			switch (star){
+				case "1":
+                    tips="1星差评，文档太差劲了";
+					break;
+				case "2":
+                    tips="2星差评，文档有点差劲";
+                    break;
+				case "3":
+                    tips="3星中评，文档一般般";
+                    break;
+				case "4":
+                    tips="4星好评，文档不错";
+                    break;
+				case "5":
+                    tips="5星好评，文档很给力";
+                    break;
+			}
+			$(".wenku-score-tips").text(tips);
+			$("#score").val(star);
+		});
+
+		//提交文档评论
+		$("form.wenku-comment-form [type=submit]").click(function (e) {
+			e.preventDefault();
+			var form=$("form.wenku-comment-form"),score=$("#score").val(),comment=form.find("[name=Comment]").val(),answer=form.find("[name=Answer]").val(),action=form.attr("action");
+			if (score=="0"){
+				wenku_alert("danger","请给文档评分",3000,"");
+				return
+			}
+            if (comment.length<8 || comment.length>255){
+                wenku_alert("danger","评论内容，字符个数限8-255个字符",3000,"");
+                form.find("[name=Comment]").focus();
+                return
+            }
+            if (answer!=$(".wenku-answer-tips .text-danger").text()){
+                wenku_alert("danger","请输入正确答案",3000,"");
+                form.find("[name=Answer]").focus();
+                return
+            }
+			$.post(action,form.serialize(),function (ret) {
+				if(ret.status==1){
+					wenku_alert("success",ret.msg,3000,"");
+                    form.find("[name=Comment]").val("");
+                    form.find("[name=Answer]").val("");
+                    $("#score").val("0");
+                    $(".wenku-score .fa-star").addClass("fa-star-o").removeClass("fa-star");
+				}else{
+                    wenku_alert("error",ret.msg,3000,"");
+				}
+            });
+        });
+
+
+		//举报文档
+		$(".btn-submit-report").click(function(){
+			var reason =$("#ModalReport [name=Reason]:checked").val();
+            var did =$("#ModalReport [name=Did]").val();
+			$.get("/report",{Did:did,Reason:reason},function (ret) {
+				if(ret.status==1){
+                    wenku_alert("success",ret.msg,5000,"");
+				}else{
+					wenku_alert("error",ret.msg,5000,"");
+				}
+            });
+		});
+
+		//收藏文档
+        $(".wenku-collect").click(function () {
+            //获取收藏夹
+            var id =$(this).attr("data-id");
+            $.get("/collect/folder",function (ret) {
+                var html='<option value="">请选择收藏夹</option>';
+                if (ret.data){
+                    $.each(ret.data,function () {
+                        html+='<option value="'+this.Id+'">'+this.Title+'</option>';
+                    });
+                }
+                $("#ModalCollect [name=Cid]").html(html);
+                $("#ModalCollect").modal("show");
+            });
+        });
+
+        //下载文档
+		$(".btn-submit-download").click(function () {
+			$.get($(this).attr("data-url"),function (ret) {
+				if(ret.status==1){
+					$("#ModalDownload").modal("hide");
+					location.href=ret.data.url;
+				}else{
+					wenku_alert("danger",ret.msg,5000,"");
+				}
+            });
+        });
+
+        //跳转去创建收藏夹
+        $(".wenku-create-folder").click(function () {
+            $("#ModalCollect").modal("hide");
+        });
+
+        //收藏文档到收藏夹
+        $(".btn-submit-collect").click(function () {
+            var did=$("#ModalCollect [name=Did]").val(),cid=$("#ModalCollect [name=Cid] option:selected").val();
+            if (cid==""){
+                $("#ModalCollect [name=Cid]").focus();
+                wenku_alert("error","请选择收藏夹",3000,"");
+            }else{
+                $.get("/collect",{Did:did,Cid:cid},function (ret) {
+                   if (ret.status==1){
+                       $("#ModalCollect").modal("hide");
+                       $(".wenku-collect").addClass("disabled");
+                       $(".wenku-collect span").text("已收藏");
+                       wenku_alert("success",ret.msg,3000,"");
+                   } else{
+                       wenku_alert("error",ret.msg,3000,"");
+                   }
+                });
+            }
+        });
+
+		//输入字符统计
+		var len=255;
+        $("form.wenku-comment-form textarea").keyup(function () {
+            $(".wenku-comment-num").text(len-$(this).val().length);
+        });
+
+
+</script>
+{% endblock %}

@@ -1,0 +1,48 @@
+/*wenku page content [start]*/
+ .container{width: 90%;min-width: 1100px !important;max-width:1200px;}
+.wenku-onlycover .container{width: 1100px !important;}
+.wenku-onlycover .container .wenku-view img{max-width: 702px;}
+ h1{font-size: 22px;margin: 0px;line-height: 150%;}
+ h1 img{position: relative;top:-3px;}
+ h1 .fa{font-size: 20px;}
+ .wenku-doc-info .pull-right span{margin-left: 15px;}
+ .wenku-relate .h7{margin: 0px 0px 5px;}
+ .wenku-relate .col-xs-6{padding: 0px;}
+ .wenku-relate .col-xs-6 li{width: 335px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;word-break: break-all;padding: 5px 0px;border-bottom: 1px dashed #EEEEEE;}
+ .wenku-relate li img{width: 18px;position: relative;top: -2px;}
+ .wenku-relate ul{margin-bottom: 0px;}
+
+ .wenku-preview-tips{border: 1px dashed #f1c40f;padding: 5px;border-radius: 3px;clear: both;}
+
+ .wenku-right{padding-right: 0px;}
+ .wenku-right .panel img{height: 18px;position: relative;top: -2px;margin-right: 5px;}
+ .wenku-right .panel li{display: block;border-bottom: 1px dashed #EFEFEF;overflow: hidden;text-overflow: ellipsis;white-space: nowrap;line-height: 240%;}
+ .wenku-right .panel .panel-body{padding-bottom: 5px;}
+ .wenku-right .nav-tabs{margin-bottom: 10px;}
+ .wenku-right .nav-tabs li{border-bottom: 0px;}
+ .wenku-unview h1{
+    border-bottom: 1px solid #ddd;
+    padding: 0px 0px 15px;
+    margin: 5px 0px 15px;
+    border-radius: 0px;
+}
+ .wenku-unview li{border-bottom: 1px dashed #EFEFEF;line-height: 35px;}
+ .wenku-comment form{margin-top:15px;}
+ .wenku-score .fa-star{color: #FFAC2D;}
+ .wenku-score{cursor: pointer;margin-left: 15px;}
+ .wenku-score .fa-star{color: #FFAC2D;}
+ .wenku-answer-tips{position: relative;top:3px;padding-right: 15px;}
+ .wenku-comment form [name=Answer]{margin-right: -10px;}
+ .wenku-answer{margin-right: -10px;}
+ .wenku-score-tips{margin-left: 8px;font-size:12px;}
+ .wenku-comment-content{word-break: break-all;text-indent:2em;}
+ .wenku-comment-list li{margin-bottom: 15px;border-bottom: 1px dashed #EEEEEE;padding-bottom: 12px;}
+
+ .wenku-viewer{overflow-x: hidden;border:5px solid #F6F6F6;border-bottom: 0px;clear: both;}
+ .wenku-unview{border: 0px !important;padding:0px 5px;}
+ .wenku-viewer .wenku-viewer-img{border-bottom: 5px solid #F6F6F6;display: block;width: 100%;}
+ .wenku-viewer-more{border-bottom: 5px solid #F6F6F6;padding: 30px 0px 20px;}
+ .wenku-viewer-more .btn{margin: 10px 0px;}
+ .active-forbidden a{cursor: default;background-color: #bdc3c7 !important;border-color:#bdc3c7 !important; }
+
+/*wenku page content [end]*/

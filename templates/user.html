@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-3 wenku-right">
+    <div class="panel panel-default">
+        <div class="panel-heading"><span class="strong">个人主页</span></div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-xs-12">
+                    <a href="#"  data-placement="bottom" class="thumbnail wenku-circle-avatar wenku-tooltip wenku-update-avatar">
+                        <img src="/static/img/avatar.png" class="img-responsive" alt="{{ user.username }}"/>
+                    </a>
+                </div>
+                <div class="col-xs-12 username-info">
+                    <div class="strong">
+                        <a href="{% url 'user' %}" title="{{ user.username }}">{{ user.username }} </a>
+                    </div>
+                    <div class="help-block clearfix">
+                        <div class="col-xs-4">
+                            <div>文档:</div>
+                            <div class="text-primary">{{ user.uploads.count }}</div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div>收藏:</div>
+                            <div class="text-primary">{{ user.collects.count }}</div>
+                        </div>
+                        <div class="col-xs-4">
+                            <div>下载:</div>
+                            <div class="text-primary">{{ user.downloads.count }}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="help-block">
+                <div class="strong">个性签名 </div>
+                <div style="text-indent: 2em;">"当前用户暂无个性签名"</div>
+            </div>
+            <div class="panel panel-default text-center wenku-noradius clearfix wenku-noborder">
+          <button class="col-xs-12 btn btn-default btn-lg"><a href="{% url 'logout' %}"> 登出账号</a></button>
+            </div>
+            <div class="panel panel-default text-center wenku-noradius clearfix wenku-noborder">
+          <button class="col-xs-12 btn btn-primary btn-lg"><a href="{% url 'password_change' %}"> 修改密码</a></button>
+            </div>
+        </div>
+    </div>
+        </div>
+
+        <div class="col-xs-9 wenku-left pull-left">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="wenku-list-table">
+                        <div class="wenku-list-table-head clearfix">
+                            <div class="col-xs-5">文档</div>
+                            <div class="col-xs-1">页数</div>
+                            <div class="col-xs-1">浏览</div>
+                            <div class="col-xs-1">下载</div>
+                            <div class="col-xs-3">上传时间</div>
+                        </div>
+                        <div class="wenku-list-table-body">
+                            <ul>
+                                {% for file in files %}
+                                <li class="clearfix">
+                                    <div class="col-xs-5 wenku-text-ellipsis">
+                                        <a href="{% url 'content' file.id %}" title="{{ file.name }}" target="_blank"><img alt="{{ file.ext }}文档" src="/static/img/{{ file.ext }}_24.png"/> {{ file.name }}</a>
+                                    </div>
+                                    <div class="col-xs-1"> {{ file.page }}</div>
+                                    <div class="col-xs-1"> {{ file.views }}</div>
+                                    <div class="col-xs-1"> {{ file.downloads }}</div>
+                                    <div class="col-xs-3"> {{ file.uploaded_at }}</div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        {% ifequal files.count 0 %}
+                                <div class="alert alert-info">您暂时还没有上传任何文档，期待您的分享</div>
+                            {% endifequal %}
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+
+                                {% if  files.previous_page_number > 0 %}
+                                    <li>
+                                        <a href="?wd={{ wd }}&page={{ files.previous_page_number }}"
+                                           aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% for page_num in page_list %}
+                                    {% if page_num == files.number %}
+                                        <li class="active"><a href="?wd={{ wd }}&page={{ page_num }}">{{ page_num }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li><a href="?wd={{ wd }}&page={{ page_num }}">{{ page_num }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if files.has_next %}
+                                    <li>
+                                        <a href="?wd={{ wd }}&page={{ files.next_page_number }}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                            </ul>
+                        </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+{% endblock %}

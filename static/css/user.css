@@ -1,0 +1,46 @@
+/*wenku page user [start]*/
+ .wenku-left{padding: 0px;}
+ .wenku-left .nav-tabs{font-size: 15px;}
+ .wenku-left .nav-tabs li:first-of-type a{border-left: 0px !important;}
+ .wenku-left .panel-heading .pull-right a{margin-left: 15px;color: #6b7a88;font-size: 15px;}
+ .wenku-left .panel-heading .pull-right a.active{color: #00B38A;}
+ .wenku-left .panel-heading .wenku-show{border-left: 1px solid #DDDDDD;margin-left: 15px;}
+ .wenku-left .wenku-list-thumb .col-xs-3{margin-bottom: 25px;}
+ .wenku-left .wenku-list-thumb .thumbnail{height: 240px;overflow: hidden;border-radius: 0px;}
+ .wenku-left .wenku-list-thumb .thumbnail .img-responsive{width: 160px;height: 230px;}
+ .wenku-left .wenku-list-thumb .wenku-icon{position: absolute;top: 5px;right: 20px;}
+ .wenku-left .wenku-list-thumb .wenku-title{text-align: left;position: absolute;width: 175px;bottom: 5px;left:15px;background-color: rgba(0,0,0,0.5);color: #FFFFFF;padding: 5px 15px;height: 37px;word-break: break-all;transition: all 0.3s ease-in-out;-moz-transition: all 0.3s ease-in-out;-webkit-transition: all 0.3s ease-in-out;-ms-transition: all 0.3s ease-in-out;-o-transition: all 0.3s ease-in-out;overflow: hidden;}
+ .wenku-left .wenku-list-thumb .wenku-thumbnail-collect-edit .wenku-title{height:240px;}
+ .wenku-left .wenku-list-thumb .thumbnail:hover .wenku-title{height:240px;}
+ .wenku-right{padding-right: 15px;padding-left: 0px;}
+ .wenku-right .wenku-username{font-size: 16px;}
+ .wenku-right .wenku-rankuser li{margin-bottom: 15px;border-bottom: 1px dashed #EEEEEE;padding-bottom: 10px;}
+ .wenku-right .wenku-rankuser li:last-of-type{margin-bottom: 0px;border-bottom: 0px;padding-bottom: 0px;}
+ .wenku-right .wenku-rankuser .thumbnail{border-radius: 50%;}
+ .wenku-right .wenku-rankuser .thumbnail img{border-radius: 50%;}
+ .wenku-right .wenku-rankuser .col-xs-10{padding-right: 0px;}
+ .wenku-right .wenku-rankuser .col-xs-10 .help-block{margin-bottom: 0px;margin-top: 0px;}
+ .wenku-list-table-head{background-color: #F6F6F6;padding: 5px 0px 5px 5px;margin-bottom: 15px;}
+ .wenku-list-table-head div{color: #34495e !important;}
+ .wenku-list-table .col-xs-1, .wenku-list-table .col-xs-2{padding: 0px;color: #bdc3c7;}
+ .wenku-list-table .col-xs-2{width: 90px;}
+ .wenku-list-table .col-xs-5{width: 340px;padding-left: 0px;}
+ .wenku-list-table-body li img{height: 18px;position: relative;top: -2px;}
+ .wenku-list-table-body li{padding: 10px 2px;}
+ .wenku-list-table-body li:hover{background-color: #F6F6F6;}
+ .wenku-list-table-body li .wenku-time{display: block;}
+ .wenku-list-table-body li .wenku-edit{display: none;}
+ .wenku-list-table-body li:hover .wenku-time{display: none;}
+ .wenku-list-table-body li:hover .wenku-edit{display: inline-block;}
+ .wenku-circle-avatar{border-radius:50% !important;width: 100px;height: 100px;margin: 0px auto;}
+ .wenku-circle-avatar img{border-radius: 50% !important;}
+ a.wenku-collect-edit{font-size: 12px !important;color:#ffffff !important;}
+ .wenku-thumbnail-collect-edit .btn-group{text-align: right;clear: both;width: 100%;}
+ .wenku-thumbnail-collect-edit .btn-group .btn{width: 50%;padding: 8px;}
+ .username-info .strong{text-align: center;margin-top: 10px;}
+ .username-info .help-block .col-xs-4{text-align: center;padding: 0px;border-left: 1px solid #EFEFEF;border-right: 1px solid #EFEFEF}
+ .username-info .help-block .col-xs-middle{border: 0px;}
+ .username-info .help-block{margin: 15px 0px;}
+
+
+/*wenku page user [end]*/

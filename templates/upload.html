@@ -1,0 +1,192 @@
+{% extends 'base.html' %}
+
+{% load widget_tweaks %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'css/upload.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="strong">文档上传</div>
+            </div>
+            <div class="panel-body">
+                <div class="col-xs-8">
+                    <form class="form-horizontal wenku-form-upload" role="form" method="post" action="" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">文档上传 <i class="text-danger">*</i></label>
+                            <div class="col-sm-10">
+                                <input type="file" required="required" data-err="请上传一篇文档" class="form-control" data-maxsize="52428800" data-accept="doc,docx,ppt,pptx,xls,xlsx,txt,pdf" name="file" placeholder="请上传一篇文档">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">文档名称 <i class="text-danger">*</i></label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" data-err="请输入文档名称" required="required" name="title" placeholder="请输入文档名称">
+                                <input type="hidden" name="Filename">
+                            </div>
+                        </div>
+                        <div class="form-group form-chanel">
+                            <label class="col-sm-2 control-label">文库频道 <i class="text-danger">*</i></label>
+                            <div class="col-sm-10">
+                                <select name="channel" id="id_channel" onchange="Get_Next_Category('id_channel', 'Get_first_category')" required="required" data-err="请选择文库频道" class="form-control">
+                                    <option id="Not_data1">请选择文库频道</option>
+                                    {% for channel in channels %}
+                                        <option id="{{ channel.name }}">{{ channel.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group form-cate">
+                            <label class="col-sm-2 control-label">文档分类 <i class="text-danger">*</i></label>
+                            <div class="col-sm-5 form-level-one">
+                                <select name="first_category" id="id_first_category" onchange="Get_Next_Category('id_first_category', 'Get_second_category')" required="required" data-err="请选择一级文档分类" class="form-control">
+                                    <option id="Not_data2">请先选择文库频道</option>
+                                </select>
+                            </div>
+                            <div class="col-sm-5 form-level-two">
+                                <select name="second_category" id="id_second_category" required="required" data-err="请选择二级文档分类" class="form-control">
+                                    <option id="Not_data3">请先选择一级文档分类</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="hidden" name="Md5" value="">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">文档简介 <i class="text-danger">*</i></label>
+                            <div class="col-sm-10">
+                                <textarea name="description" required="required" rows="7" class="form-control" placeholder="请输入文档的相关简介，让大家更容易找到文档"></textarea>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-block btn-primary btn-lg">确定上传文档</button>
+                    </form>
+                </div>
+
+                <div class="col-xs-4">
+                    <div class="panel panel-default">
+                        <div class="panel-body wenku-nopadding">
+                            <div class="strong">温馨提示</div>
+                            <div class="help-block">
+                                1.带有 <i class="text-danger">*</i> 为必填项。同时<span class="text-success strong">建议填写文档标签和文档简介，方便自己和他人更快更准确地找到需求文档</span>。
+                            </div>
+                            <div class="help-block">
+                                2.允许上传的最大文档为：<span class="strong text-primary">50MB</span>。
+                            </div>
+                            <div class="help-block">
+                                3.分享，让知识传承更久远。<a href="/" target="_blank" title="我的文库">我的文库</a>致力于成为最大的行业文库平台，在尊重知识产权的前提下，让更多的人平等地获取知识。
+                            </div>
+                            <div class="help-block">
+                                4.目前支持的文档类型：
+                                <p>
+                                    <img src="/static/img/doc_24.png" alt="Word文档" /> doc，docx
+                                </p>
+                                <p>
+                                    <img src="/static/img/ppt_24.png" alt="PPT文档" /> ppt，pptx
+                                </p>
+                                <p>
+                                    <img src="/static/img/xls_24.png" alt="XLS文档" /> xls，xlsx
+                                </p>
+                                <p>
+                                    <img src="/static/img/txt_24.png" alt="TXT文档" /> txt
+                                </p>
+                                <p>
+                                    <img src="/static/img/pdf_24.png" alt="PDF文档" /> pdf
+                                </p>
+                            </div>
+                            <div class="help-block">5.上传涉嫌侵权或违法的文档将会被移除。</div>
+                            <div class="help-block">6.上传有问题需要帮助？请查看 <a href="#" target="_blank" title="文库帮助">文库帮助</a> 和 <a href="#" target="_blank" title="意见反馈">意见反馈</a></div>
+                            <div class="help-block">7.为营造绿色网络环境，严禁上传含有淫秽色情及低俗信息等文档，让我们一起携手共同打造健康文库</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="text/javascript">
+        //用来获得option元素中selected属性为true的元素的id
+        function Get_Selected_Id(id){
+            var pro = document.getElementById(id);
+            var Selected_Id = pro.options[pro.selectedIndex].id;
+//            console.log("Get_Selected_Id:"+Selected_Id);  //测试使用
+            return Selected_Id;         //返回selected属性为true的元素的id
+        }
+
+        //执行相应的动作，调用相关数据请求函数
+        function Get_Next_Category(Channel_ID,Action){
+            var Selected_Id = Get_Selected_Id(Channel_ID);   //Selected_Id用来记录当前被选中的省或市的ID
+            if(Action=='Get_first_category')                            //从而可以在下一个级联中加载相应的市或县
+                Get_First_Category_Data(Selected_Id);
+            else if(Action=='Get_second_category')
+                Get_Second_Category_Data(Selected_Id);
+        }
+
+        //向服务器请求城市列表数据并调用添加城市函数
+        function Get_First_Category_Data(Channel_Selected_Id){    //这里的Selected_Id应该是被选中的省份的ID
+//            console.log("Channel_Selected_Id:"+Channel_Selected_Id);   //测试使用
+            if(Channel_Selected_Id == 'Not_data1'){    //如果选择了"Province"选项，则表示重置当前City和Country的选项内容，不会向服务器请求数据
+                $("#id_first_category").empty();
+                $("#id_first_category").append("<option id='Not_data2'>请先选择文库频道</option>");
+                $("#id_second_category").empty();
+                $("#id_second_category").append("<option id='Not_data3'>请先选择一级文档分类</option>");
+            }else{      //否则就会向服务器请求数据
+                $.getJSON('/GetFirstCategoryData/',{'Channel':Channel_Selected_Id},function(First_Category_list){
+//                    console.log(First_Category_list);      //测试使用
+                    Add_first_category(First_Category_list);    //调用添加城市选项函数
+                });
+            }
+        }
+
+        //在当前页面添加城市选项
+        function Add_first_category(First_Category_list){
+            $("#id_first_category").empty();
+            $("#id_first_category").append("<option id='Not_data2'>请先选择文库频道</option>");
+            $("#id_second_category").empty();
+            $("#id_second_category").append("<option id='Not_data3'>请先选择一级文档分类</option>");
+            //上面的两次清空与两次添加是为了保持级联的一致性
+            for(var index in First_Category_list){     //获得城市列表中的城市索引
+                //添加内容的同时在option标签中添加对应的城市ID
+                var text = "<option"+" id='"+First_Category_list[index]+"'>"+First_Category_list[index]+"</option>";
+                $("#id_first_category").append(text);
+                console.log(text);  //用来观察生成的text数据
+            }
+        }
+
+        //向服务器请求县区列表数据并调用添加县区函数
+       function Get_Second_Category_Data(First_Category_Selected_Id){
+//           console.log("First_Category_Selected_Id:"+First_Category_Selected_Id);   //测试使用
+           if(First_Category_Selected_Id == 'Not_data2'){     //如果选择了City选项，则表示重置当前Country的选项内容，不会向服务器请求数据
+               $("#id_second_category").empty();
+               $("#id_second_category").append("<option id='Not_data3'>请先选择一级文档分类</option>");
+               //上面的清空与添加是为了保持级联的一致性
+           }else{   //否则就会向服务器请求数据
+               var Channel_Selected_ID = Get_Selected_Id("id_channel");  //获得被选中省的ID，从而方便从服务器中加载数据
+               $.getJSON('/GetSecondCategoryData/',{'Channel':Channel_Selected_ID,'First_Category':First_Category_Selected_Id},function(Second_Category_list){
+//                   console.log(Second_Category_list);    //测试使用
+                   Add_second_category(Second_Category_list);   //调用添加县区选项函数
+               });
+           }
+        }
+
+        //在当前页面添加县区选项
+        function Add_second_category(Second_Category_list){
+            $("#id_second_category").empty();
+            $("#id_second_category").append("<option id='Not_data3'>请先选择一级文档分类</option>");
+            //上面的清空与添加是为了保持级联的一致性
+            for(var index in Second_Category_list){     //获得县区列表中的县区索引
+                //添加内容的同时在option标签中添加对应的城市ID
+                var text = "<option"+" id='"+Second_Category_list[index]+"'>"+Second_Category_list[index]+"</option>";
+                $("#id_second_category").append(text);
+                console.log(text);  //用来观察生成的text数据
+            }
+        }
+
+    </script>
+        <iframe frameborder="0" style="display: none;" id="notarget" name="notarget"></iframe>
+    </div>
+</div>
+
+{% endblock %}

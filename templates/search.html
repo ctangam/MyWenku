@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'css/search.css' %}">
+{% endblock %}
+
+{% block body %}
+    <body id="wenku-search">
+    <div class="container-fluid">
+        <div class="container wenku-top">
+  			<span class="pull-left">
+  				<a href="{% url 'home' %}" target="_blank" title="文库首页">文库首页</a>
+                {% for channel in channels %}
+                    <a href="{% url 'channel_files' channel.id %}" target="_blank"
+                       title="{{ channel.name }}">{{ channel.name }}</a>
+                {% endfor %}
+  			</span>
+            <span class="pull-right">
+			 	<a href="{% url 'upload' %}" target="_blank" title="上传文档">上传文档</a>
+			 	<a href="{% url 'user' %}" target="_blank" title="会员中心">会员中心</a>
+            </span>
+        </div>
+    </div>
+    <div class="container-fluid wenku-header">
+        <div class="container">
+            <div class="col-xs-2 wenku-left">
+                <a href="/" title="我的文库" target="_blank">
+                    <img alt="我的文库" class="wenku-logo img-responsive" src="/static/img/logo1.jpg"/>
+                </a>
+            </div>
+            <div class="col-xs-7">
+                <form class="pull-right" action="{% url 'search' 'all' 'default' %}" method="get" role="search">
+                    <div class="input-group input-group-lg">
+                        <input type="text" required="required" name="wd" value="{{ wd }}" placeholder="请输入搜索关键字"
+                               class="form-control">
+                        <span class="input-group-btn"><button type="submit" class="btn btn-default">文库搜索</button></span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="container wenku-mgt-15px">
+        <div class="row">
+            <div class="col-xs-2 wenku-left">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="strong">文档类型</div>
+                        <ul>
+                            <li><a href='/search/all/default?wd={{ wd }}'
+                                   {% ifequal type "all" %}class="active"{% endifequal %}>不限</a></li>
+                            <li><a href='/search/pdf/default?wd={{ wd }}'
+                                   {% ifequal type "pdf" %}class="active"{% endifequal %}>PDF</a></li>
+                            <li><a href='/search/doc/default?wd={{ wd }}'
+                                   {% ifequal type "doc" %}class="active"{% endifequal %}>DOC</a></li>
+                            <li><a href='/search/ppt/default?wd={{ wd }}'
+                                   {% ifequal type "ppt" %}class="active"{% endifequal %}>PPT</a></li>
+                            <li><a href='/search/xls/default?wd={{ wd }}'
+                                   {% ifequal type "xls" %}class="active"{% endifequal %}>XLS</a></li>
+                            <li><a href='/search/txt/default?wd={{ wd }}'
+                                   {% ifequal type "txt" %}class="active"{% endifequal %}>TXT</a></li>
+                        </ul>
+                        <div class="strong">结果排序</div>
+                        <ul>
+                            <li><a href="/search/all/default?wd={{ wd }}"
+                                   {% ifequal order 'default' %}class="active"{% endifequal %}>默认排序</a></li>
+                            <li><a href="/search/all/page?wd={{ wd }}"
+                                   {% ifequal order 'page' %}class="active"{% endifequal %}>页数排序</a></li>
+                            <li><a href="/search/all/size?wd={{ wd }}"
+                                   {% ifequal order 'size' %}class="active"{% endifequal %}>大小排序</a></li>
+                            <li><a href="/search/all/downloads?wd={{ wd }}"
+                                   {% ifequal order 'downloads' %}class="active"{% endifequal %}>下载排序</a></li>
+                            <li><a href="/search/all/views?wd={{ wd }}"
+                                   {% ifequal order 'views' %}class="active"{% endifequal %}>浏览排序</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-7">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div class="help-block">
+                            <a href="#" rel="noreferrer" target="_blank">我的文库</a> 本次搜索耗时<span
+                                class="text-danger">{{ time }}</span>秒，在 <span
+                                class="text-primary">{{ count_all }}</span> 篇文档中为您找到相关结果约 <span
+                                class="text-success">{{ count }}</span> 个.
+                        </div>
+                        <ul class="wenku-result">
+
+
+                            {% for file in files %}
+
+                                <li class="clearfix">
+                                    <div class="wenku-title">
+                                        <a href="{% url 'content' file.id %}" target="_blank"
+                                           title="{{ file.name }}"><img alt="{{ file.ext }}文档"
+                                                                        src="/static/img/{{ file.ext }}_24.png"/> {{ file.name }}
+                                        </a>
+                                    </div>
+                                    <div class="wenku-desc help-block">{{ file.description }}</div>
+                                    <div class="help-block wenku-info">
+                                        <div class="text-muted">
+                                            <span class="pull-right">浏览: {{ file.views }} | {{ file.page }} 页 | {{ file.size|filesizeformat }}<span
+                                                    class="hidden-xs"> | {{ file.uploaded_at }}</span> </span>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                            {% ifequal count 0 %}
+                                <div class="alert alert-info">很遗憾没能搜到您想要的结果，建议您更换搜索关键字重试.</div>
+                            {% endifequal %}
+                        </ul>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination">
+
+                                {% if  files.previous_page_number > 0 %}
+                                    <li>
+                                        <a href="?wd={{ wd }}&page={{ files.previous_page_number }}"
+                                           aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% for page_num in page_list %}
+                                    {% if page_num == files.number %}
+                                        <li class="active"><a href="?wd={{ wd }}&page={{ page_num }}">{{ page_num }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li><a href="?wd={{ wd }}&page={{ page_num }}">{{ page_num }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if files.has_next %}
+                                    <li>
+                                        <a href="?wd={{ wd }}&page={{ files.next_page_number }}" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-3 wenku-nopadding">
+                <div class="panel panel-default wenku-search-words">
+                    <div class="panel-heading">
+                        <div class="strong">大家在搜</div>
+                    </div>
+                    <div class="panel-body">
+                        {% for log in searchlogs %}
+                            <a href="#">{{ log.keyword }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid wenku-footer">
+        <div class="container">
+            <div class="row wenku-flink">
+                <div class="col-xs-12">
+                    <div><strong>友情链接</strong></div>
+                    <div class="help-block">
+
+                        <a href="https://www.djangoproject.com/" target="_blank" title="Django">Django</a>
+
+    					<a href="https://www.python.org/" target="_blank" title="Python">Python</a>
+
+    					<a href="https://github.com/" target="_blank" title="Github">Github</a>
+
+    					<a href="https://www.mysql.com/" target="_blank" title="MySQL">MySQL</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-fluid wenku-footer-dark">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-12 text-center wenku-help help-block">
+
+                    <a href="#" target="_blank" title="关于我们">关于我们</a>
+
+                    <a href="#" target="_blank" title="关于我们">文库协议</a>
+
+                    <a href="#" target="_blank" title="意见反馈">意见反馈</a>
+
+                    <a href="#" target="_blank" title="免责声明">免责声明</a>
+
+                    <a href="" target="_blank" title="意见反馈">联系我们</a>
+
+                </div>
+                <div class="col-xs-12 text-center help-block">
+                    我的文库&nbsp;&nbsp;©2019&nbsp;&nbsp;<span class="text-muted">|</span>&nbsp;&nbsp;<a href="#"
+                                                                                                     title="站点地图"
+                                                                                                     target="_blank">站点地图</a>
+                </div>
+                <div class="col-xs-12 text-center help-block">
+                    <small> Powered By <a href="#" style="color: #1abc9c;" target="_blank" title="Django">Django</a>
+                        v1.1
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
+{% endblock %}

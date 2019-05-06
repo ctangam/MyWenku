@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block stylesheet %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+	<div class="row mobile-banner">
+
+		<div class="col-xs-3 wenku-nopadding wenku-pdl-15px pull-right">
+			<div class="panel panel-default text-center wenku-noradius wenku-noborder wenku-count clearfix">
+				<div class="col-xs-6 wenku-nopadding">
+					<div class="help-block">收录文档</div>
+					<span class="text-primary">{{file_count}}</span>
+				</div>
+				<div class="col-xs-6 wenku-nopadding">
+					<div class="help-block">注册用户</div>
+					<span class="text-primary">{{user_count}}</span>
+				</div>
+			</div>
+            <div class="panel panel-default text-center wenku-noradius clearfix wenku-noborder">
+          <button class="col-xs-12 btn btn-default btn-lg"><a href="{% url 'login' %}"> 登录账号</a></button>
+            </div>
+            <div class="panel panel-default text-center wenku-noradius clearfix wenku-noborder">
+          <button class="col-xs-12 btn btn-primary btn-lg"><a href="{% url 'signup' %}"> 注册账号</a></button>
+            </div>
+		</div>
+
+        <div class="col-xs-9 wenku-nopadding pull-left">
+            <div id="wenku-carousel" class="carousel slide">
+                <ol class="carousel-indicators">
+
+                    <li data-target="#wenku-carousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#wenku-carousel" data-slide-to="1"></li>
+                    <li data-target="#wenku-carousel" data-slide-to="2"></li>
+                    <li data-target="#wenku-carousel" data-slide-to="3"></li>
+
+                </ol>
+                <div class="carousel-inner">
+                    <a href="#" target="_blank" title="#" class="item active">
+                        <img src="/static/img/banner1.jpg" alt="#">
+                        <div class="carousel-caption"></div>
+                    </a>
+                    <a href="#" target="_blank" title="#" class="item">
+                        <img src="/static/img/banner2.jpg" alt="#">
+                        <div class="carousel-caption"></div>
+                    </a>
+                    <a href="#" target="_blank" title="#" class="item">
+                        <img src="/static/img/banner3.jpg" alt="#">
+                        <div class="carousel-caption"></div>
+                    </a>
+                    <a href="#" target="_blank" title="#" class="item">
+                        <img src="/static/img/banner4.jpg" alt="#">
+                        <div class="carousel-caption"></div>
+                    </a>
+                </div>
+                <a class="carousel-control left" href="#wenku-carousel" data-slide="prev"><span class="fa fa-angle-left"></span></a>
+                <a class="carousel-control right" href="#wenku-carousel" data-slide="next"><span class="fa fa-angle-right"></span></a>
+            </div>
+        </div>
+
+	</div>
+
+
+</div>
+
+<div class="container-fluid wenku-cate">
+	<div class="container">
+		<div class="row">
+        {% for channel in channels %}
+            {% ifnotequal channel.id 5 %}
+			<div class="col-xs-3">
+				<div class="h5">{{ channel.name }}</div>
+				<div class="wenku-cate-list">
+                    {% for category in channel.get_first_categories %}
+					<a href="{% url 'first_category_files' channel.id category.id %}">{{ category.name }}</a>
+                    {% endfor %}
+				</div>
+			</div>
+            {% endifnotequal %}
+        {% endfor %}
+		</div>
+	</div>
+</div>
+
+<div class="container">
+
+	<div class="row wenku-item">
+		<div class="col-xs-6">
+			<div class="panel panel-default wenku-noborder">
+				<div class="panel-heading"><strong>热门推荐</strong></div>
+				<div class="panel-body">
+					<a href="javascript:void(0);" class="col-xs-5 wenku-nopadding">
+						<img src="/static/img/cover-news1.png"/>
+					</a>
+					<div class="col-xs-7 wenku-nopadding">
+						<ul>
+							{% for file in files %}
+							<li>
+								<a href="{% url 'content' file.id %}" target="_blank" title="{{ file.name }}" class="wenku-text-ellipsis">
+                                    <img alt="{{ file.ext }}文档" src="/static/img/{{ file.ext }}_24.png"> {{ file.name }}
+								</a>
+							</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+
+        {% for channel in channels %}
+
+		<div {% if forloop.counter0|divisibleby:2 %} class="col-xs-6 wenku-mgl-15px" {% else %} class="col-xs-6" {% endif %}>
+			<div class="panel panel-default wenku-noborder">
+				<div class="panel-heading"><strong>{{ channel.name }}</strong>
+					<a href="{% url 'channel_files' channel.id %}" target="_blank" title="{{ channel.name }}" class="pull-right text-muted">更多>></a>
+				</div>
+				<div class="panel-body">
+					<a href="{% url 'channel_files' channel.id %}" title="{{ channel.name }}" target="_blank" class="col-xs-5 wenku-nopadding">
+						<img alt="{{ channel.name }}" style="width: 195px;height: 154px;" src="/static/img/cover-news{{ forloop.counter|add:1 }}.png" onerror="this.src='/static/img/cover-news{{ forloop.counter|add:1 }}.png'"/>
+					</a>
+					<div class="col-xs-7 wenku-nopadding">
+						<ul>
+							{% for file in channel.get_latest_files %}
+								<li>
+									<a href="{% url 'content' file.id %}" target="_blank" title="{{ file.name }}" class="wenku-text-ellipsis">
+										<img alt="{{ file.ext }}文档" src="/static/img/{{ file.ext }}_24.png"> {{ file.name }}
+									</a>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+    {% if forloop.counter0|divisibleby:2 %}
+		</div>
+		<div class="row wenku-item">
+	{% endif %}
+
+		{% endfor %}
+
+	</div>
+</div>
+
+
+{% endblock %}
